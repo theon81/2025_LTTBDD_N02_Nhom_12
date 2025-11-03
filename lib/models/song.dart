@@ -1,0 +1,18 @@
+class Song {
+  final String id;
+  final String title;
+  final String artist;
+  final String assetPath; // path under assets/ for bundled demo songs
+  final String? coverPath; // optional cover art asset
+
+  const Song({
+    required this.id,
+    required this.title,
+    required this.artist,
+    required this.assetPath,
+    this.coverPath,
+  });
+
+  @override
+  String toString() => '$title — $artist';
+}

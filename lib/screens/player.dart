@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/song.dart';
 import '../models/playback_settings.dart';
+import '../services/playback_manager.dart';
 
 /// player screen
 class PlayerScreen extends StatelessWidget {
@@ -12,7 +13,8 @@ class PlayerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final settings = PlaybackSettingsProvider.of(context);
+  final settings = PlaybackSettingsProvider.of(context);
+  final manager = PlaybackManagerProvider.of(context);
 
     return Material(
       color: theme.colorScheme.surface,
@@ -64,20 +66,20 @@ class PlayerScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 // basic control
-                IconButton(onPressed: () {}, icon: const Icon(Icons.skip_previous), iconSize: 36, color: theme.colorScheme.onSurface),
+                IconButton(onPressed: () => manager.previous(), icon: const Icon(Icons.skip_previous), iconSize: 36, color: theme.colorScheme.onSurface),
                 const SizedBox(width: 8),
                 // play button
                 Material(
                   shape: const CircleBorder(),
                   color: theme.colorScheme.primary,
                   child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.play_arrow, color: theme.colorScheme.onPrimary),
+                    onPressed: () => manager.togglePlay(),
+                    icon: Icon(manager.playing ? Icons.pause : Icons.play_arrow, color: theme.colorScheme.onPrimary),
                     iconSize: 28,
                   ),
                 ),
                 const SizedBox(width: 8),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.skip_next), iconSize: 36, color: theme.colorScheme.onSurface),
+                IconButton(onPressed: () => manager.next(), icon: const Icon(Icons.skip_next), iconSize: 36, color: theme.colorScheme.onSurface),
                 const SizedBox(width: 12),
                 // loop
                 IconButton(

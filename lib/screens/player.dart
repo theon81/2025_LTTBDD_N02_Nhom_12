@@ -43,7 +43,7 @@ class PlayerScreen extends StatelessWidget {
                   Expanded(
                     child: Center(
                       child: Text(
-                        'Now Playing',
+                        settings.t('now_playing'),
                         style: const TextStyle(
                           color: Colors.white, 
                           fontSize: 18,

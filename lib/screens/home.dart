@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+  final theme = Theme.of(context);
 
     return Material(
       color: theme.colorScheme.surface,
@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: theme.colorScheme.primary,
               child: Center(
                 child: Text(
-                  _titleForIndex(_selectedIndex),
+                  _titleForIndex(context, _selectedIndex),
                   style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -54,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildTabContent(BuildContext context, int idx) {
+    final settings = PlaybackSettingsProvider.of(context);
     final theme = Theme.of(context);
     switch (idx) {
       case 0:
@@ -157,26 +158,102 @@ class _HomeScreenState extends State<HomeScreen> {
         );
 
       case 1:
-        return Center(child: Text('Playlists (coming soon)', style: theme.textTheme.bodyLarge));
+        return Center(child: Text(settings.t('playlists_coming'), style: theme.textTheme.bodyLarge));
 
       case 2:
-        return Center(child: Text('Info / About', style: theme.textTheme.bodyLarge));
+        // settings
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // en/vi toggle
+              Text(
+                settings.t('language'), 
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.onSurface
+                )
+              ),
+
+              const SizedBox(height: 8),
+
+              ToggleButtons(
+                isSelected: [settings.languageCode == 'en', settings.languageCode == 'vi'],
+                onPressed: (i) {
+                  settings.setLanguage(i == 0 ? 'en' : 'vi');
+                },
+                color: Colors.white70,
+                selectedColor: theme.colorScheme.onPrimary,
+                fillColor: theme.colorScheme.primary,
+                borderRadius: BorderRadius.circular(6),
+                children: const [Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16, 
+                    vertical: 8
+                  ), 
+                  child: Text('EN')
+                ), 
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16, 
+                    vertical: 8
+                  ), 
+                  child: Text('VI')
+                )
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              // group info
+              Text(settings.t('author'), style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSurface)),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: theme.colorScheme.surface, borderRadius: BorderRadius.circular(8)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text('Name: Nguyễn Hoàng Dương', style: TextStyle(color: Colors.white)),
+                    SizedBox(height: 6),
+                    Text('Student ID: 22012865', style: TextStyle(color: Colors.white70)),
+                    SizedBox(height: 6),
+                    Text('Class: N02', style: TextStyle(color: Colors.white70)),
+                  ],
+                ),
+              ),
+
+              const Spacer(),
+
+              // app version
+              Center(
+                child: Text(
+                  settings.t('version'), 
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.7)
+                  )
+                )
+              ),
+            ],
+          ),
+        );
 
       default:
         return const SizedBox.shrink();
     }
   }
 
-  String _titleForIndex(int idx) {
+  String _titleForIndex(BuildContext context, int idx) {
+    final settings = PlaybackSettingsProvider.of(context);
     switch (idx) {
       case 0:
-        return 'Your Music';
+        return settings.t('your_music');
       case 1:
-        return 'Your Playlists';
+        return settings.t('your_playlists');
       case 2:
-        return 'Info / Settings';
+        return settings.t('info_settings');
       default:
-        return 'Your Music';
+        return settings.t('your_music');
     }
   }
 }
@@ -186,6 +263,7 @@ class _MiniPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final manager = PlaybackManagerProvider.of(context);
+    final settings = PlaybackSettingsProvider.of(context);
 
   // first time launch => hide miniplayer, on pause => keep
     final idx = manager.currentIndex;
@@ -264,7 +342,7 @@ class _MiniPlayer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        hasTrack ? activeSong!.title : 'Not playing', 
+                        hasTrack ? activeSong!.title : settings.t('not_playing'), 
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurface
                         ), 
@@ -334,9 +412,9 @@ class _BottomTabs extends StatelessWidget {
       color: theme.colorScheme.surface,
       child: Row(
         children: [
-          _tabItem(context, icon: Icons.library_music, label: 'Songs', index: 0),
-          _tabItem(context, icon: Icons.playlist_play, label: 'Playlists', index: 1),
-          _tabItem(context, icon: Icons.info, label: 'Info', index: 2),
+          _tabItem(context, icon: Icons.library_music, label: 'songs', index: 0),
+          _tabItem(context, icon: Icons.playlist_play, label: 'playlists_tab', index: 1),
+          _tabItem(context, icon: Icons.info, label: 'info_tab', index: 2),
         ],
       ),
     );
@@ -345,6 +423,7 @@ class _BottomTabs extends StatelessWidget {
   Widget _tabItem(BuildContext context, {required IconData icon, required String label, required int index}) {
     final theme = Theme.of(context);
     final active = index == selectedIndex;
+    final settings = PlaybackSettingsProvider.of(context);
     return Expanded(
       child: InkWell(
         onTap: () => onTabSelected(index),
@@ -359,7 +438,7 @@ class _BottomTabs extends StatelessWidget {
             const SizedBox(height: 4),
 
             Text(
-              label, 
+              settings.t(label), 
               style: theme.textTheme.bodySmall?.copyWith(
                 color: active ? theme.colorScheme.secondary : theme.colorScheme.onSurface
               )

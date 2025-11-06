@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: theme.colorScheme.primary,
               child: Center(
                 child: Text(
-                  'Your Music',
+                  _titleForIndex(_selectedIndex),
                   style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -164,6 +164,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
       default:
         return const SizedBox.shrink();
+    }
+  }
+
+  String _titleForIndex(int idx) {
+    switch (idx) {
+      case 0:
+        return 'Your Music';
+      case 1:
+        return 'Your Playlists';
+      case 2:
+        return 'Info / Settings';
+      default:
+        return 'Your Music';
     }
   }
 }

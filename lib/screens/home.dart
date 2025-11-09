@@ -273,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 20),
 
-              // group info
+              // student info
               Text(settings.t('author'), style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSurface)),
               const SizedBox(height: 8),
               Container(

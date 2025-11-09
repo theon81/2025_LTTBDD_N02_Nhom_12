@@ -77,7 +77,7 @@ class PlaybackSettings extends ChangeNotifier {
       'author': 'Tác giả',
       'version': 'Phiên bản 1.0.0+1',
       'songs': 'Bài hát',
-      'playlists_tab': 'Danh sách phát',
+      'playlists_tab': 'Danh sách',
       'info_tab': 'Thông tin',
       'not_playing': 'Không có bài nào',
       'now_playing': 'Đang phát',
